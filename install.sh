@@ -93,6 +93,7 @@ bspwm_and_sxhkd() {
     cp bspwmrc "$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
     chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
     cp sxhkdrc "$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
+}
 
 check_root
 install_dependencies
