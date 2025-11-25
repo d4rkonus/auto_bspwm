@@ -93,6 +93,9 @@ bspwm_and_sxhkd() {
     cp bspwmrc "/home/$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
     chmod +x "/home/$USER_HOME/.config/bspwm/bspwmrc"
     cp sxhkdrc "/home/$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
+    cp "/$ruta/config/sxhkdrc" "/home/$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc personalizado${endColour}"; exit 1; }
+    chmod +x "/home/$USER_HOME/.config/sxhkd/sxhkdrc"
+
 }
 
 check_root
