@@ -1,32 +1,36 @@
 #!/bin/bash
 
-#Colours
-greenColour="\e[0;32m\033[1m"
-endColour="\033[0m\e[0m"
-redColour="\e[0;31m\033[1m"
-blueColour="\e[0;34m\033[1m"
-yellowColour="\e[0;33m\033[1m"
-purpleColour="\e[0;35m\033[1m"
-turquoiseColour="\e[0;36m\033[1m"
-grayColour="\e[0;37m\033[1m"
+# Colours
+greenColour="\e[1;32m"
+endColour="\e[0m"
+redColour="\e[1;31m"
+blueColour="\e[1;34m"
+yellowColour="\e[1;33m"
+purpleColour="\e[1;35m"
+turquoiseColour="\e[1;36m"
+grayColour="\e[1;37m"
 
-ruta=$(pwd)
-
-tput civis
-trap 'tput cnorm; exit' INT TERM EXIT
-
-USER_HOME=$(eval echo ~$SUDO_USER)
 ruta="$(pwd)"
+
+# Ocultar cursor
+tput civis
+
+# Restaurar cursor al salir
+trap 'tput cnorm' EXIT
+trap 'tput cnorm; exit 1' INT TERM
+
+# Obtener home del usuario real
+USER_HOME="${SUDO_USER:-$(whoami)}"
 
 check_root() {
     if [[ "$(id -u)" -ne 0 ]]; then
-        echo -e "\n[!] Please run this script as root."
+        echo -e "\n${redColour}[!] Please run this script as root.${endColour}"
         exit 1
     fi
 }
 
 install_dependencies() {
-    echo -e "\n[+] Instalando dependencias..."
+    echo -e "\n${blueColour}[+] Instalando dependencias...${endColour}"
     apt-get update -y >/dev/null 2>&1
 
     # Dependencias comunes
@@ -62,32 +66,34 @@ install_dependencies() {
         feh scrot scrub rofi xclip bat locate ranger wmname acpi \
         bspwm sxhkd imagemagick \
         >/dev/null 2>&1
+
+    echo -e "${greenColour}[✓] Dependencias instaladas.${endColour}"
 }
 
-bspwm_and_sxhkd(){
-    echo -e "\n[+] Clonando repositorios de bspwm y sxhkd..."
-    cd /home/$SUDO_USER/Downloads || exit 1
-    git clone https://github.com/baskerville/bspwm.git >/dev/null
-    git clone https://github.com/baskerville/sxhkd.git >/dev/null
-    cd bspwm/
-    make
-    sudo make install
-    cd ../sxhkd/
-    make
-    sudo make install
- 
-    sudo apt install bspwm
+bspwm_and_sxhkd() {
+    echo -e "\n${blueColour}[+] Clonando repositorios de bspwm y sxhkd...${endColour}"
+    cd "$USER_HOME/Downloads" || exit 1
 
-    mkdir ~/.config/bspwm
-    mkdir ~/.config/sxhkd
-    cd /home/$SUDO_USER/Downloads/bspwm/examples || exit 1
-    cp bspwmrc ~/.config/bspwm/
-    chmod +x ~/.config/bspwm/bspwmrc 
-    cp sxhkdrc ~/.config/sxhkd/
-    cd "$ruta" || exit 1
-    cp "$ruta/config/sxhkdrc" ~/.config/sxhkd/
-}
+    git clone https://github.com/baskerville/bspwm.git >/dev/null 2>&1 || true
+    git clone https://github.com/baskerville/sxhkd.git >/dev/null 2>&1 || true
 
-check_root()
-install_dependencies()
-bspwm_and_sxhkd()
+    cd bspwm/ || exit 1
+    make || { echo -e "${redColour}[!] Error compilando bspwm${endColour}"; exit 1; }
+    sudo make install || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
+
+    cd ../sxhkd/ || exit 1
+    make || { echo -e "${redColour}[!] Error compilando sxhkd${endColour}"; exit 1; }
+    sudo make install || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
+
+    # Crear configuraciones en el home del usuario
+    mkdir -p "$USER_HOME/.config/bspwm"
+    mkdir -p "$USER_HOME/.config/sxhkd"
+
+    cd ../bspwm/examples || exit 1
+    cp bspwmrc "$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
+    chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
+    cp sxhkdrc "$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
+
+check_root
+install_dependencies
+bspwm_and_sxhkd
