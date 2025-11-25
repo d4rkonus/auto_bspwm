@@ -20,7 +20,11 @@ trap 'tput cnorm' EXIT
 trap 'tput cnorm; exit 1' INT TERM
 
 # Obtener home del usuario real
-USER_HOME="${SUDO_USER:-$(whoami)}"
+if [[ -n "$SUDO_USER" ]]; then
+    USER_HOME_DIR=$(eval echo "~$SUDO_USER")
+else
+    USER_HOME_DIR="$HOME"
+fi
 
 check_root() {
     if [[ "$(id -u)" -ne 0 ]]; then
@@ -81,48 +85,48 @@ install_dependencies() {
 
 bspwm_and_sxhkd() {
     echo -e "\n${blueColour}[+] Clonando repositorios de bspwm y sxhkd...${endColour}"
-    cd "/home/$USER_HOME/Downloads" || exit 1
+    cd "$USER_HOME_DIR/Downloads" || exit 1
 
     git clone https://github.com/baskerville/bspwm.git >/dev/null 2>&1 || true
     git clone https://github.com/baskerville/sxhkd.git >/dev/null 2>&1 || true
 
     cd bspwm/ || exit 1
     make || { echo -e "${redColour}[!] Error compilando bspwm${endColour}"; exit 1; }
-    sudo make install || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
+    make install || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
 
     cd ../sxhkd/ || exit 1
     make || { echo -e "${redColour}[!] Error compilando sxhkd${endColour}"; exit 1; }
-    sudo make install || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
+    make install || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
 
     # Crear configuraciones en el home del usuario
-    mkdir -p "/home/$USER_HOME/.config/bspwm"
-    mkdir -p "/home/$USER_HOME/.config/sxhkd"
+    mkdir -p "$USER_HOME_DIR/.config/bspwm"
+    mkdir -p "$USER_HOME_DIR/.config/sxhkd"
 
     cd ../bspwm/examples || exit 1
-    cp bspwmrc "/home/$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
-    chmod +x "/home/$USER_HOME/.config/bspwm/bspwmrc"
-    cp sxhkdrc "/home/$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
-    cp "/$ruta/config/sxhkdrc" "/home/$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc personalizado${endColour}"; exit 1; }
-    chmod +x "/home/$USER_HOME/.config/sxhkd/sxhkdrc"
+    cp bspwmrc "$USER_HOME_DIR/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
+    chmod +x "$USER_HOME_DIR/.config/bspwm/bspwmrc"
+    cp sxhkdrc "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
+    cp "$ruta/config/sxhkdrc" "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc personalizado${endColour}"; exit 1; }
+    chmod +x "$USER_HOME_DIR/.config/sxhkd/sxhkdrc"
 
 }
 
 polybar_install(){
     echo -e "\n${blueColour}[+] Instalando Polybar...${endColour}"
-    cd "/home/$USER_HOME/Downloads" || exit 1
+    cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone --recursive https://github.com/polybar/polybar >/dev/null 2>&1
     cd polybar/ || exit 1
     mkdir build && cd build || exit 1
     cmake .. 
     make -j$(nproc)
-    sudo make install  
-    cd "/home/$USER_HOME/Downloads" || exit 1
+    make install  
+    cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone https://github.com/VaughnValle/blue-sky.git >/dev/null 2>&1
-    mkdir -p "/home/$USER_HOME/.config/polybar"
-    cp -r blue-sky/polybar/* "/home/$USER_HOME/.config/polybar/"
-    echo "~/.config/polybar/launch.sh &" >> ~/.config/bspwm/bspwmrc 
-    cd fonts/ || exit 1
-    sudo cp * /usr/share/fonts/truetype/
+    mkdir -p "$USER_HOME_DIR/.config/polybar"
+    cp -r blue-sky/polybar/* "$USER_HOME_DIR/.config/polybar/"
+    echo "$USER_HOME_DIR/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
+    cd "$USER_HOME_DIR/Downloads/blue-sky/fonts" || exit 1
+    cp * /usr/share/fonts/truetype/
     fc-cache -v
 
     echo -e "${greenColour}[✓] Polybar instalado.${endColour}"
@@ -134,7 +138,7 @@ picom_install(){
     git submodule update --init --recursive
     meson --buildtype=release . build
     ninja -C build
-    sudo ninja -C build install
+    ninja -C build install
 
     echo -e "${greenColour}[✓] Picom instalado.${endColour}"
 
