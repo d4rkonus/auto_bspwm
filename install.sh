@@ -88,3 +88,6 @@ bspwm_and_sxhkd(){
     cp "$ruta/config/sxhkdrc" ~/.config/sxhkd/
 }
 
+check_root()
+install_dependencies()
+bspwm_and_sxhkd()
