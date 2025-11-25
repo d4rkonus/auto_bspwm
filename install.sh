@@ -86,13 +86,13 @@ bspwm_and_sxhkd() {
     sudo make install || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
 
     # Crear configuraciones en el home del usuario
-    mkdir -p "$USER_HOME/.config/bspwm"
-    mkdir -p "$USER_HOME/.config/sxhkd"
+    mkdir -p "/home/$USER_HOME/.config/bspwm"
+    mkdir -p "/home/$USER_HOME/.config/sxhkd"
 
     cd ../bspwm/examples || exit 1
-    cp bspwmrc "$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
-    chmod +x "$USER_HOME/.config/bspwm/bspwmrc"
-    cp sxhkdrc "$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
+    cp bspwmrc "/home/$USER_HOME/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
+    chmod +x "/home/$USER_HOME/.config/bspwm/bspwmrc"
+    cp sxhkdrc "/home/$USER_HOME/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
 }
 
 check_root
