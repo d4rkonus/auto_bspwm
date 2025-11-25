@@ -80,9 +80,11 @@ bspwm_and_sxhkd(){
 
     mkdir ~/.config/bspwm
     mkdir ~/.config/sxhkd
-    cd /home/$SUDO_USER/Downloads/bspwm/
-    cp examples/bspwmrc ~/.config/bspwm/
+    cd /home/$SUDO_USER/Downloads/bspwm/examples || exit 1
+    cp bspwmrc ~/.config/bspwm/
     chmod +x ~/.config/bspwm/bspwmrc 
-    cp examples/sxhkdrc ~/.config/sxhkd/
+    cp sxhkdrc ~/.config/sxhkd/
+    cd "$ruta" || exit 1
+    cp "$ruta/config/sxhkdrc" ~/.config/sxhkd/
 }
 
