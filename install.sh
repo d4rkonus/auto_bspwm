@@ -61,11 +61,20 @@ install_dependencies() {
         libxcb-image0-dev libxcb-composite0-dev \
         >/dev/null 2>&1
 
-    # Paquetes adicionales
+    # Paquetes adicionales # 1
     apt-get install -y \
         feh scrot scrub rofi xclip bat locate ranger wmname acpi \
         bspwm sxhkd imagemagick \
         >/dev/null 2>&1
+
+    # Paquetes adicionales # 2
+    apt-get install -y \
+         meson libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-xfixes0-dev \
+         libxcb-shape0-dev libxcb-render-util0-dev libxcb-render0-dev libxcb-randr0-dev \
+         libxcb-composite0-dev libxcb-image0-dev libxcb-present-dev libxcb-xinerama0-dev \
+         libpixman-1-dev libdbus-1-dev libconfig-dev libgl1-mesa-dev libpcre2-dev libevdev-dev \
+         uthash-dev libev-dev libx11-xcb-dev libxcb-glx0-dev \
+         >/dev/null 2>&1
 
     echo -e "${greenColour}[✓] Dependencias instaladas.${endColour}"
 }
@@ -98,6 +107,41 @@ bspwm_and_sxhkd() {
 
 }
 
+polybar_install(){
+    echo -e "\n${blueColour}[+] Instalando Polybar...${endColour}"
+    cd "/home/$USER_HOME/Downloads" || exit 1
+    git clone --recursive https://github.com/polybar/polybar >/dev/null 2>&1
+    cd polybar/ || exit 1
+    mkdir build && cd build || exit 1
+    cmake .. 
+    make -j$(nproc)
+    sudo make install  
+    cd "/home/$USER_HOME/Downloads" || exit 1
+    git clone https://github.com/VaughnValle/blue-sky.git >/dev/null 2>&1
+    mkdir -p "/home/$USER_HOME/.config/polybar"
+    cp -r blue-sky/polybar/* "/home/$USER_HOME/.config/polybar/"
+    echo "~/.config/polybar/launch.sh &" >> ~/.config/bspwm/bspwmrc 
+    cd fonts/ || exit 1
+    sudo cp * /usr/share/fonts/truetype/
+    fc-cache -v
+
+    echo -e "${greenColour}[✓] Polybar instalado.${endColour}"
+}
+
+picom_install(){
+    git clone https://github.com/ibhagwan/picom.git >/dev/null 2>&1
+    cd picom/ || exit 1
+    git submodule update --init --recursive
+    meson --buildtype=release . build
+    ninja -C build
+    sudo ninja -C build install
+
+    echo -e "${greenColour}[✓] Picom instalado.${endColour}"
+
+}
+
 check_root
 install_dependencies
 bspwm_and_sxhkd
+polybar_install
+picom_install
