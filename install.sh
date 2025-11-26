@@ -147,7 +147,7 @@ picom_install(){
 
 include_files(){
     echo -e "\n${blueColour}[+] Incluyendo archivos de configuración adicionales...${endColour}"
-    echo '~/.config/polybar/launch.sh &' >> "$USER_HOME/.config/bspwm/bspwmrc"    
+    echo "~/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"    
     echo "vmware-user-suid-wrapper &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
     echo "picom &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
     echo "bspc config border_width 0 &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
