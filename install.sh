@@ -153,8 +153,8 @@ include_files(){
     echo "bspc config border_width 0 &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
     # -------------------------------------
     mkdir -p "$USER_HOME_DIR/.config/kitty"
-    cp "$ruta/config/kitty.conf" "$USER_HOME_DIR/.config/kitty/"
-    cp "$ruta/config/color.ini" "$USER_HOME_DIR/.config/kitty/"
+    cp "$ruta/kitty/kitty.conf" "$USER_HOME_DIR/.config/kitty/"
+    cp "$ruta/kitty/color.ini" "$USER_HOME_DIR/.config/kitty/"
     
     echo -e "${greenColour}[✓] Archivos de configuración incluidos.${endColour}"
 }
