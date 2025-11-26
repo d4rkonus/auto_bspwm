@@ -155,7 +155,9 @@ include_files(){
     mkdir -p "$USER_HOME_DIR/.config/kitty"
     cp "$ruta/kitty/kitty.conf" "$USER_HOME_DIR/.config/kitty/"
     cp "$ruta/kitty/color.ini" "$USER_HOME_DIR/.config/kitty/"
-    
+    # -------------------------------------
+    cp "$ruta/config/workspace.ini" "$USER_HOME_DIR/.config/polybar/"
+    cp "$ruta/config/current.ini" "$USER_HOME_DIR/.config/polybar/"
     echo -e "${greenColour}[✓] Archivos de configuración incluidos.${endColour}"
 }
 
