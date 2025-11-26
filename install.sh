@@ -139,9 +139,20 @@ picom_install(){
     meson --buildtype=release . build
     ninja -C build
     ninja -C build install
-
+    mkdir -p "$USER_HOME_DIR/.config/picom"
+    cp "$ruta/config/picom.conf" "$USER_HOME_DIR/.config/picom/"
     echo -e "${greenColour}[✓] Picom instalado.${endColour}"
 
+}
+
+include_files(){
+    echo -e "\n${blueColour}[+] Incluyendo archivos de configuración adicionales...${endColour}"
+    echo '~/.config/polybar/launch.sh &' >> "$USER_HOME/.config/bspwm/bspwmrc"    
+    echo "vmware-user-suid-wrapper &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
+    echo "picom &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
+    echo "bspc config border_width 0 &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
+    
+    echo -e "${greenColour}[✓] Archivos de configuración incluidos.${endColour}"
 }
 
 check_root
@@ -149,3 +160,4 @@ install_dependencies
 bspwm_and_sxhkd
 polybar_install
 picom_install
+include_files
