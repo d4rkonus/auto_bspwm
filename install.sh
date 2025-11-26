@@ -169,7 +169,7 @@ include_files(){
 
 move_fonts(){
     echo -e "\n${blueColour}[+] Moviendo fuentes...${endColour}"
-    cp -r "$ruta/fonts/"* "/usr/share/fonts/"
+    cp -r "$ruta/fonts/"* "/usr/local/share/fonts/"
     fc-cache -fv >/dev/null 2>&1
     echo -e "${greenColour}[✓] Fuentes movidas.${endColour}"
 }
