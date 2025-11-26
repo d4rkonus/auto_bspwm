@@ -159,8 +159,18 @@ include_files(){
     cp "$ruta/config/workspace.ini" "$USER_HOME_DIR/.config/polybar/"
     cp "$ruta/config/current.ini" "$USER_HOME_DIR/.config/polybar/"
     echo -e "${greenColour}[✓] Archivos de configuración incluidos.${endColour}"
+    # -------------------------------------
+    mkdir -p "$USER_HOME_DIR/.config/bin"
+    cp "$ruta/bin/kali_ip.sh" "$USER_HOME_DIR/.config/bin/"
+    cp "$ruta/bin/vpn_ip.sh" "$USER_HOME_DIR/.config/bin/"
 }
 
+move_fonts(){
+    echo -e "\n${blueColour}[+] Moviendo fuentes...${endColour}"
+    cp -r "$ruta/fonts/"* "$USER_HOME_DIR/usr/share/fonts/"
+    fc-cache -fv >/dev/null 2>&1
+    echo -e "${greenColour}[✓] Fuentes movidas.${endColour}"
+}
 
 
 check_root
@@ -169,3 +179,4 @@ bspwm_and_sxhkd
 polybar_install
 picom_install
 include_files
+move_fonts
