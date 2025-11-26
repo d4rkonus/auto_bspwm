@@ -125,7 +125,7 @@ polybar_install(){
     mkdir -p "$USER_HOME_DIR/.config/polybar"
     cp -r blue-sky/polybar/* "$USER_HOME_DIR/.config/polybar/"
     echo "$USER_HOME_DIR/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
-    cd "$USER_HOME_DIR/Downloads/blue-sky/fonts" || exit 1
+    cd "$USER_HOME_DIR/Downloads/blue-sky/polybar/fonts" || exit 1
     cp * /usr/share/fonts/truetype/
     fc-cache -v
 
