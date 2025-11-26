@@ -163,6 +163,8 @@ include_files(){
     mkdir -p "$USER_HOME_DIR/.config/bin"
     cp "$ruta/bin/kali_ip.sh" "$USER_HOME_DIR/.config/bin/"
     cp "$ruta/bin/vpn_ip.sh" "$USER_HOME_DIR/.config/bin/"
+    chmod +x "$USER_HOME_DIR/.config/bin/kali_ip.sh"
+    chmod +x "$USER_HOME_DIR/.config/bin/vpn_ip.sh"
 }
 
 move_fonts(){
