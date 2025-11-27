@@ -208,26 +208,53 @@ fix_permissions(){
 }
 
 move_wallpaper(){
-    echo -e "\n${blueColour}[+] Moviendo wallpapers...${endColour}"
-    mkdir ~/Wallpaper
-    cp -v $ruta/wallpaper.jpg ~/Wallpaper
-    echo "feh --bg-fill ~/Wallpaper/wallpaper.jpg" >> ~/.config/bspwm/bspwmrc
-    echo -e "${greenColour}[✓] Wallpapers movidos.${endColour}"
+    echo -e "\n${blueColour}[+] Moviendo wallpaper...${endColour}"
+    if [[ -f "$ruta/wallpaper.jpg" ]]; then
+        mkdir -p "$USER_HOME_DIR/Pictures"
+        cp "$ruta/wallpaper.jpg" "$USER_HOME_DIR/Pictures/wallpaper.jpg"
+        echo "feh --bg-fill ~/Pictures/wallpaper.jpg" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
+        echo -e "${greenColour}[✓] Wallpaper movido.${endColour}"
+    else
+        echo -e "${yellowColour}[!] Wallpaper no encontrado.${endColour}"
+    fi
 }
 
 p10k_install(){
     echo -e "\n${blueColour}[+] Instalando Powerlevel10k...${endColour}"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME_DIR/.powerlevel10k" >/dev/null 2>&1 || true
     
-    # Copiar configuración preestablecida de p10k si existe
-    if [[ -f "$ruta/.p10k.zsh" ]]; then
-        cp "$ruta/.p10k.zsh" "$USER_HOME_DIR/"
-        echo -e "${greenColour}[✓] Configuración de p10k copiada.${endColour}"
-    fi
+    # Instalar para el usuario principal
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME_DIR/.powerlevel10k" >/dev/null 2>&1 || true
     
     # Añadir powerlevel10k al .zshrc si no está ya presente
     if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "$USER_HOME_DIR/.zshrc"; then
         echo "source $USER_HOME_DIR/.powerlevel10k/powerlevel10k.zsh-theme" >> "$USER_HOME_DIR/.zshrc"
+    fi
+    
+    # Copiar configuración personalizada de p10k si existe
+    if [[ -f "$ruta/.p10k.zsh" ]]; then
+        cp "$ruta/.p10k.zsh" "$USER_HOME_DIR/"
+        # Añadir source de p10k config si no está presente
+        if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q ".p10k.zsh" "$USER_HOME_DIR/.zshrc"; then
+            echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> "$USER_HOME_DIR/.zshrc"
+        fi
+    fi
+    
+    # Instalar para root si es diferente del usuario principal
+    if [[ "$USER_HOME_DIR" != "/root" ]]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/.powerlevel10k >/dev/null 2>&1 || true
+        
+        # Configurar zsh de root
+        if [[ -f "/root/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "/root/.zshrc"; then
+            echo "source /root/.powerlevel10k/powerlevel10k.zsh-theme" >> /root/.zshrc
+        fi
+        
+        # Copiar configuración personalizada de p10k para root
+        if [[ -f "$ruta/.p10k.zsh" ]]; then
+            cp "$ruta/.p10k.zsh" /root/
+            if [[ -f "/root/.zshrc" ]] && ! grep -q ".p10k.zsh" "/root/.zshrc"; then
+                echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc
+            fi
+        fi
     fi
     
     echo -e "${greenColour}[✓] Powerlevel10k instalado.${endColour}"
@@ -241,8 +268,8 @@ polybar_install
 picom_install
 include_files
 move_fonts
-p10k_install
 move_wallpaper
+p10k_install
 fix_permissions
 
 echo -e "\n${greenColour}[✓] DONE ${endColour}"
