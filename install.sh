@@ -201,14 +201,29 @@ fix_permissions(){
     if [[ -n "$SUDO_USER" ]]; then
         chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.config" 2>/dev/null || true
         chown "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.zshrc" 2>/dev/null || true
+        chown "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.p10k.zsh" 2>/dev/null || true
         chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.powerlevel10k" 2>/dev/null || true
     fi
     echo -e "${greenColour}[✓] Permisos ajustados.${endColour}"
 }
 
+move_wallpaper(){
+    echo -e "\n${blueColour}[+] Moviendo wallpapers...${endColour}"
+    mkdir ~/Wallpaper
+    cp -v $ruta/wallpaper.jpg ~/Wallpaper
+    echo "feh --bg-fill ~/Wallpaper/wallpaper.jpg" >> ~/.config/bspwm/bspwmrc
+    echo -e "${greenColour}[✓] Wallpapers movidos.${endColour}"
+}
+
 p10k_install(){
     echo -e "\n${blueColour}[+] Instalando Powerlevel10k...${endColour}"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME_DIR/.powerlevel10k" >/dev/null 2>&1 || true
+    
+    # Copiar configuración preestablecida de p10k si existe
+    if [[ -f "$ruta/.p10k.zsh" ]]; then
+        cp "$ruta/.p10k.zsh" "$USER_HOME_DIR/"
+        echo -e "${greenColour}[✓] Configuración de p10k copiada.${endColour}"
+    fi
     
     # Añadir powerlevel10k al .zshrc si no está ya presente
     if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "$USER_HOME_DIR/.zshrc"; then
@@ -227,6 +242,7 @@ picom_install
 include_files
 move_fonts
 p10k_install
+move_wallpaper
 fix_permissions
 
 echo -e "\n${greenColour}[✓] DONE ${endColour}"
