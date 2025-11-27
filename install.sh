@@ -101,12 +101,12 @@ bspwm_and_sxhkd() {
     git clone https://github.com/baskerville/sxhkd.git >/dev/null 2>&1 || true
 
     cd bspwm/ || exit 1
-    make || { echo -e "${redColour}[!] Error compilando bspwm${endColour}"; exit 1; }
-    make install || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
+    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compilando bspwm${endColour}"; exit 1; }
+    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
 
     cd ../sxhkd/ || exit 1
-    make || { echo -e "${redColour}[!] Error compilando sxhkd${endColour}"; exit 1; }
-    make install || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
+    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compilando sxhkd${endColour}"; exit 1; }
+    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
 
     # Crear configuraciones en el home del usuario
     mkdir -p "$USER_HOME_DIR/.config/bspwm"
@@ -127,16 +127,16 @@ polybar_install(){
     git clone --recursive https://github.com/polybar/polybar >/dev/null 2>&1
     cd polybar/ || exit 1
     mkdir build && cd build || exit 1
-    cmake .. 
-    make -j$(nproc)
-    make install  
+    cmake .. >/dev/null 2>&1
+    make -j$(nproc) >/dev/null 2>&1
+    make install >/dev/null 2>&1
     cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone https://github.com/VaughnValle/blue-sky.git >/dev/null 2>&1
     mkdir -p "$USER_HOME_DIR/.config/polybar"
     cp -r blue-sky/polybar/* "$USER_HOME_DIR/.config/polybar/"
     cd "$USER_HOME_DIR/Downloads/blue-sky/polybar/fonts" || exit 1
-    cp * /usr/share/fonts/truetype/
-    fc-cache -v
+    cp * /usr/share/fonts/truetype/ >/dev/null 2>&1
+    fc-cache -v >/dev/null 2>&1
 
     echo -e "${greenColour}[✓] Polybar instalado.${endColour}"
 }
@@ -146,10 +146,10 @@ picom_install(){
     cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone https://github.com/ibhagwan/picom.git >/dev/null 2>&1 || true
     cd picom/ || exit 1
-    git submodule update --init --recursive
-    meson --buildtype=release . build
-    ninja -C build
-    ninja -C build install
+    git submodule update --init --recursive >/dev/null 2>&1
+    meson --buildtype=release . build >/dev/null 2>&1
+    ninja -C build >/dev/null 2>&1
+    ninja -C build install >/dev/null 2>&1
     mkdir -p "$USER_HOME_DIR/.config/picom"
     cp "$ruta/config/picom.conf" "$USER_HOME_DIR/.config/picom/"
     echo -e "${greenColour}[✓] Picom instalado.${endColour}"
