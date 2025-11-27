@@ -124,7 +124,6 @@ polybar_install(){
     git clone https://github.com/VaughnValle/blue-sky.git >/dev/null 2>&1
     mkdir -p "$USER_HOME_DIR/.config/polybar"
     cp -r blue-sky/polybar/* "$USER_HOME_DIR/.config/polybar/"
-    echo "$USER_HOME_DIR/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
     cd "$USER_HOME_DIR/Downloads/blue-sky/polybar/fonts" || exit 1
     cp * /usr/share/fonts/truetype/
     fc-cache -v
@@ -133,7 +132,9 @@ polybar_install(){
 }
 
 picom_install(){
-    git clone https://github.com/ibhagwan/picom.git >/dev/null 2>&1
+    echo -e "\n${blueColour}[+] Instalando Picom...${endColour}"
+    cd "$USER_HOME_DIR/Downloads" || exit 1
+    git clone https://github.com/ibhagwan/picom.git >/dev/null 2>&1 || true
     cd picom/ || exit 1
     git submodule update --init --recursive
     meson --buildtype=release . build
@@ -147,7 +148,7 @@ picom_install(){
 
 include_files(){
     echo -e "\n${blueColour}[+] Incluyendo archivos de configuración adicionales...${endColour}"
-    echo "~/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"    
+    echo "$USER_HOME_DIR/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"    
     echo "vmware-user-suid-wrapper &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
     echo "picom &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
     echo "bspc config border_width 0 &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
@@ -167,13 +168,54 @@ include_files(){
     chmod +x "$USER_HOME_DIR/.config/bin/value_crypto.sh"
     chmod +x "$USER_HOME_DIR/.config/bin/kali_ip.sh"
     chmod +x "$USER_HOME_DIR/.config/bin/vpn_ip.sh"
+    # -------------------------------------
+    # Configurar zsh si existe el archivo
+    if [[ -f "$ruta/.zshrc" ]]; then
+        cp "$ruta/.zshrc" "$USER_HOME_DIR/"
+        # Crear enlace simbólico en /root si es diferente al usuario
+        if [[ "$USER_HOME_DIR" != "/root" ]]; then
+            ln -sf "$USER_HOME_DIR/.zshrc" /root/.zshrc
+        fi
+    fi
+    # -------------------------------------
+    # Instalar lsd si existe el paquete
+    if [[ -f "$ruta/lsd.deb" ]]; then
+        dpkg -i "$ruta/lsd.deb" >/dev/null 2>&1 || true
+    fi
+
 }
 
 move_fonts(){
     echo -e "\n${blueColour}[+] Moviendo fuentes...${endColour}"
-    cp -r "$ruta/fonts/"* "/usr/local/share/fonts/"
-    fc-cache -fv >/dev/null 2>&1
-    echo -e "${greenColour}[✓] Fuentes movidas.${endColour}"
+    if [[ -d "$ruta/fonts" ]]; then
+        cp -r "$ruta/fonts/"* "/usr/local/share/fonts/"
+        fc-cache -fv >/dev/null 2>&1
+        echo -e "${greenColour}[✓] Fuentes movidas.${endColour}"
+    else
+        echo -e "${yellowColour}[!] Directorio de fuentes no encontrado.${endColour}"
+    fi
+}
+
+fix_permissions(){
+    echo -e "\n${blueColour}[+] Ajustando permisos de archivos...${endColour}"
+    if [[ -n "$SUDO_USER" ]]; then
+        chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.config" 2>/dev/null || true
+        chown "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.zshrc" 2>/dev/null || true
+        chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.powerlevel10k" 2>/dev/null || true
+    fi
+    echo -e "${greenColour}[✓] Permisos ajustados.${endColour}"
+}
+
+p10k_install(){
+    echo -e "\n${blueColour}[+] Instalando Powerlevel10k...${endColour}"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME_DIR/.powerlevel10k" >/dev/null 2>&1 || true
+    
+    # Añadir powerlevel10k al .zshrc si no está ya presente
+    if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "$USER_HOME_DIR/.zshrc"; then
+        echo "source $USER_HOME_DIR/.powerlevel10k/powerlevel10k.zsh-theme" >> "$USER_HOME_DIR/.zshrc"
+    fi
+    
+    echo -e "${greenColour}[✓] Powerlevel10k instalado.${endColour}"
 }
 
 
@@ -184,3 +226,7 @@ polybar_install
 picom_install
 include_files
 move_fonts
+p10k_install
+fix_permissions
+
+echo -e "\n${greenColour}[✓] Instalación completada. Por favor, reinicia tu sesión o ejecuta 'startx' para iniciar bspwm.${endColour}"
