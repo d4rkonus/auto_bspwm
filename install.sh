@@ -163,8 +163,8 @@ include_files(){
     mkdir -p "$USER_HOME_DIR/.config/bin"
     cp "$ruta/bin/kali_ip.sh" "$USER_HOME_DIR/.config/bin/"
     cp "$ruta/bin/vpn_ip.sh" "$USER_HOME_DIR/.config/bin/"
-    cp "$ruta/bin/ticker_crypto.sh" "$USER_HOME_DIR/.config/bin/"
-    chmod +x "$USER_HOME_DIR/.config/bin/ticker_crypto.sh"
+    cp "$ruta/bin/value_crypto.sh" "$USER_HOME_DIR/.config/bin/"
+    chmod +x "$USER_HOME_DIR/.config/bin/value_crypto.sh"
     chmod +x "$USER_HOME_DIR/.config/bin/kali_ip.sh"
     chmod +x "$USER_HOME_DIR/.config/bin/vpn_ip.sh"
 }
