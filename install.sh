@@ -12,6 +12,7 @@ grayColour="\e[1;37m"
 
 ruta="$(pwd)"
 
+
 # Ocultar cursor
 tput civis
 
@@ -25,6 +26,15 @@ if [[ -n "$SUDO_USER" ]]; then
 else
     USER_HOME_DIR="$HOME"
 fi
+
+say_hello(){
+    clear
+    echo -e "\n${greenColour}=======================================${endColour}"
+    echo -e "${greenColour}        Auto BSPWM Setup Script       ${endColour}"
+    echo -e "${greenColour}              by d4rkonus             ${endColour}"
+    echo -e "${greenColour}=======================================${endColour}"
+}
+
 
 check_root() {
     if [[ "$(id -u)" -ne 0 ]]; then
@@ -212,7 +222,7 @@ move_wallpaper(){
     if [[ -f "$ruta/wallpaper.jpg" ]]; then
         mkdir -p "$USER_HOME_DIR/Pictures"
         cp "$ruta/wallpaper.jpg" "$USER_HOME_DIR/Pictures/wallpaper.jpg"
-        echo "feh --bg-fill ~/Pictures/wallpaper.jpg" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
+        echo "feh --bg-fill $USER_HOME_DIR/Pictures/wallpaper.jpg &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
         echo -e "${greenColour}[✓] Wallpaper movido.${endColour}"
     else
         echo -e "${yellowColour}[!] Wallpaper no encontrado.${endColour}"
@@ -260,7 +270,7 @@ p10k_install(){
     echo -e "${greenColour}[✓] Powerlevel10k instalado.${endColour}"
 }
 
-
+say_hello
 check_root
 install_dependencies
 bspwm_and_sxhkd
