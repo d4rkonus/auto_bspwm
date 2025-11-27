@@ -58,7 +58,7 @@ install_dependencies() {
     # Picom
     apt-get install -y \
         meson libxext-dev libxcb-damage0-dev libxcb-xfixes0-dev \
-        libxcb-render-util0-dev libxcb-render0-dev libxcb-present-dev \
+        libxcb-render-util0-dev jq libxcb-render0-dev libxcb-present-dev \
         libpixman-1-dev libev-dev libdbus-1-dev libconfig-dev \
         libgl1-mesa-dev libpcre2-dev libevdev-dev uthash-dev \
         libx11-xcb-dev libxcb-glx0-dev libpcre3 libpcre3-dev \
