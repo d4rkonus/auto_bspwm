@@ -229,4 +229,4 @@ move_fonts
 p10k_install
 fix_permissions
 
-echo -e "\n${greenColour}[✓] Instalación completada. Por favor, reinicia tu sesión o ejecuta 'startx' para iniciar bspwm.${endColour}"
+echo -e "\n${greenColour}[✓] DONE ${endColour}"
