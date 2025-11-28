@@ -49,7 +49,7 @@ install_dependencies() {
 
     # Dependencias comunes
     apt-get install -y \
-        build-essential git vim meson ninja-build \
+        build-essential kitty git vim meson ninja-build \
         libxcb-util0-dev micro libxcb-ewmh-dev libxcb-randr0-dev \
         libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-xinerama0-dev \
         libasound2-dev libxcb-xtest0-dev libxcb-shape0-dev \
