@@ -44,7 +44,7 @@ check_root() {
 }
 
 install_dependencies() {
-    echo -e "\n${blueColour}[+] Instalando dependencias...${endColour}"
+    echo -e "\n${blueColour}[+] Installing dependencies...${endColour}"
     apt-get update -y >/dev/null 2>&1
 
     # Dependencias comunes
@@ -90,39 +90,39 @@ install_dependencies() {
          uthash-dev libev-dev libx11-xcb-dev libxcb-glx0-dev \
          >/dev/null 2>&1
 
-    echo -e "${greenColour}[✓] Dependencias instaladas.${endColour}"
+    echo -e "${greenColour}[✓] Dependencies installed.${endColour}"
 }
 
 bspwm_and_sxhkd() {
-    echo -e "\n${blueColour}[+] Clonando repositorios de bspwm y sxhkd...${endColour}"
+    echo -e "\n${blueColour}[+] Cloning bspwm and sxhkd repositories...${endColour}"
     cd "$USER_HOME_DIR/Downloads" || exit 1
 
     git clone https://github.com/baskerville/bspwm.git >/dev/null 2>&1 || true
     git clone https://github.com/baskerville/sxhkd.git >/dev/null 2>&1 || true
 
     cd bspwm/ || exit 1
-    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compilando bspwm${endColour}"; exit 1; }
-    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error instalando bspwm${endColour}"; exit 1; }
+    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compiling bspwm${endColour}"; exit 1; }
+    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error installing bspwm${endColour}"; exit 1; }
 
     cd ../sxhkd/ || exit 1
-    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compilando sxhkd${endColour}"; exit 1; }
-    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error instalando sxhkd${endColour}"; exit 1; }
+    make >/dev/null 2>&1 || { echo -e "${redColour}[!] Error compiling sxhkd${endColour}"; exit 1; }
+    make install >/dev/null 2>&1 || { echo -e "${redColour}[!] Error installing sxhkd${endColour}"; exit 1; }
 
     # Crear configuraciones en el home del usuario
     mkdir -p "$USER_HOME_DIR/.config/bspwm"
     mkdir -p "$USER_HOME_DIR/.config/sxhkd"
 
     cd ../bspwm/examples || exit 1
-    cp bspwmrc "$USER_HOME_DIR/.config/bspwm/" || { echo -e "${redColour}[!] Error copiando bspwmrc${endColour}"; exit 1; }
+    cp bspwmrc "$USER_HOME_DIR/.config/bspwm/" || { echo -e "${redColour}[!] Error copying bspwmrc${endColour}"; exit 1; }
     chmod +x "$USER_HOME_DIR/.config/bspwm/bspwmrc"
-    cp sxhkdrc "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc${endColour}"; exit 1; }
-    cp "$ruta/config/sxhkdrc" "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copiando sxhkdrc personalizado${endColour}"; exit 1; }
+    cp sxhkdrc "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copying sxhkdrc${endColour}"; exit 1; }
+    cp "$ruta/config/sxhkdrc" "$USER_HOME_DIR/.config/sxhkd/" || { echo -e "${redColour}[!] Error copying custom sxhkdrc${endColour}"; exit 1; }
     chmod +x "$USER_HOME_DIR/.config/sxhkd/sxhkdrc"
 
 }
 
 polybar_install(){
-    echo -e "\n${blueColour}[+] Instalando Polybar...${endColour}"
+    echo -e "\n${blueColour}[+] Installing Polybar...${endColour}"
     cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone --recursive https://github.com/polybar/polybar >/dev/null 2>&1
     cd polybar/ || exit 1
@@ -138,11 +138,11 @@ polybar_install(){
     cp * /usr/share/fonts/truetype/ >/dev/null 2>&1
     fc-cache -v >/dev/null 2>&1
 
-    echo -e "${greenColour}[✓] Polybar instalado.${endColour}"
+    echo -e "${greenColour}[✓] Polybar installed.${endColour}"
 }
 
 picom_install(){
-    echo -e "\n${blueColour}[+] Instalando Picom...${endColour}"
+    echo -e "\n${blueColour}[+] Installing Picom...${endColour}"
     cd "$USER_HOME_DIR/Downloads" || exit 1
     git clone https://github.com/ibhagwan/picom.git >/dev/null 2>&1 || true
     cd picom/ || exit 1
@@ -152,12 +152,12 @@ picom_install(){
     ninja -C build install >/dev/null 2>&1
     mkdir -p "$USER_HOME_DIR/.config/picom"
     cp "$ruta/config/picom.conf" "$USER_HOME_DIR/.config/picom/"
-    echo -e "${greenColour}[✓] Picom instalado.${endColour}"
+    echo -e "${greenColour}[✓] Picom installed.${endColour}"
 
 }
 
 include_files(){
-    echo -e "\n${blueColour}[+] Incluyendo archivos de configuración adicionales...${endColour}"
+    echo -e "\n${blueColour}[+] Including additional configuration files...${endColour}"
     echo "$USER_HOME_DIR/.config/polybar/launch.sh &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"    
     echo "vmware-user-suid-wrapper &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
     echo "picom &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc" 
@@ -169,7 +169,7 @@ include_files(){
     # -------------------------------------
     cp "$ruta/config/workspace.ini" "$USER_HOME_DIR/.config/polybar/"
     cp "$ruta/config/current.ini" "$USER_HOME_DIR/.config/polybar/"
-    echo -e "${greenColour}[✓] Archivos de configuración incluidos.${endColour}"
+    echo -e "${greenColour}[✓] Configuration files included.${endColour}"
     # -------------------------------------
     mkdir -p "$USER_HOME_DIR/.config/bin"
     cp "$ruta/bin/kali_ip.sh" "$USER_HOME_DIR/.config/bin/"
@@ -196,69 +196,69 @@ include_files(){
 }
 
 move_fonts(){
-    echo -e "\n${blueColour}[+] Moviendo fuentes...${endColour}"
+    echo -e "\n${blueColour}[+] Moving fonts...${endColour}"
     if [[ -d "$ruta/fonts" ]]; then
         cp -r "$ruta/fonts/"* "/usr/local/share/fonts/"
         fc-cache -fv >/dev/null 2>&1
-        echo -e "${greenColour}[✓] Fuentes movidas.${endColour}"
+        echo -e "${greenColour}[✓] Fonts moved.${endColour}"
     else
-        echo -e "${yellowColour}[!] Directorio de fuentes no encontrado.${endColour}"
+        echo -e "${yellowColour}[!] Fonts directory not found.${endColour}"
     fi
 }
 
 fix_permissions(){
-    echo -e "\n${blueColour}[+] Ajustando permisos de archivos...${endColour}"
+    echo -e "\n${blueColour}[+] Fixing file permissions...${endColour}"
     if [[ -n "$SUDO_USER" ]]; then
         chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.config" 2>/dev/null || true
         chown "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.zshrc" 2>/dev/null || true
         chown "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.p10k.zsh" 2>/dev/null || true
         chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME_DIR/.powerlevel10k" 2>/dev/null || true
     fi
-    echo -e "${greenColour}[✓] Permisos ajustados.${endColour}"
+    echo -e "${greenColour}[✓] Permissions fixed.${endColour}"
 }
 
 move_wallpaper(){
-    echo -e "\n${blueColour}[+] Moviendo wallpaper...${endColour}"
+    echo -e "\n${blueColour}[+] Moving wallpaper...${endColour}"
     if [[ -f "$ruta/wallpaper.jpg" ]]; then
         mkdir -p "$USER_HOME_DIR/Pictures"
         cp "$ruta/wallpaper.jpg" "$USER_HOME_DIR/Pictures/wallpaper.jpg"
         echo "feh --bg-fill $USER_HOME_DIR/Pictures/wallpaper.jpg &" >> "$USER_HOME_DIR/.config/bspwm/bspwmrc"
-        echo -e "${greenColour}[✓] Wallpaper movido.${endColour}"
+        echo -e "${greenColour}[✓] Wallpaper moved.${endColour}"
     else
-        echo -e "${yellowColour}[!] Wallpaper no encontrado.${endColour}"
+        echo -e "${yellowColour}[!] Wallpaper not found.${endColour}"
     fi
 }
 
 p10k_install(){
-    echo -e "\n${blueColour}[+] Instalando Powerlevel10k...${endColour}"
+    echo -e "\n${blueColour}[+] Installing Powerlevel10k...${endColour}"
     
-    # Instalar para el usuario principal
+    # Install for main user
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME_DIR/.powerlevel10k" >/dev/null 2>&1 || true
     
-    # Añadir powerlevel10k al .zshrc si no está ya presente
+    # Add powerlevel10k to .zshrc if not already present
     if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "$USER_HOME_DIR/.zshrc"; then
         echo "source $USER_HOME_DIR/.powerlevel10k/powerlevel10k.zsh-theme" >> "$USER_HOME_DIR/.zshrc"
     fi
     
-    # Copiar configuración personalizada de p10k si existe
+    # Copy custom p10k configuration if exists
     if [[ -f "$ruta/.p10k.zsh" ]]; then
         cp "$ruta/.p10k.zsh" "$USER_HOME_DIR/"
-        # Añadir source de p10k config si no está presente
+        # Add source of p10k config if not present
         if [[ -f "$USER_HOME_DIR/.zshrc" ]] && ! grep -q ".p10k.zsh" "$USER_HOME_DIR/.zshrc"; then
             echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> "$USER_HOME_DIR/.zshrc"
         fi
     fi
     
-    # Instalar para root si es diferente del usuario principal
+    # Install for root if different from main user
     if [[ "$USER_HOME_DIR" != "/root" ]]; then
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/.powerlevel10k >/dev/null 2>&1 || true
         
-        # Configurar zsh de root
+        # Configure root zsh
         if [[ -f "/root/.zshrc" ]] && ! grep -q "powerlevel10k.zsh-theme" "/root/.zshrc"; then
             echo "source /root/.powerlevel10k/powerlevel10k.zsh-theme" >> /root/.zshrc
         fi
         
-        # Copiar configuración personalizada de p10k para root
+        # Copy custom p10k configuration for root
         if [[ -f "$ruta/.p10k.zsh" ]]; then
             cp "$ruta/.p10k.zsh" /root/
             if [[ -f "/root/.zshrc" ]] && ! grep -q ".p10k.zsh" "/root/.zshrc"; then
@@ -267,7 +267,7 @@ p10k_install(){
         fi
     fi
     
-    echo -e "${greenColour}[✓] Powerlevel10k instalado.${endColour}"
+    echo -e "${greenColour}[✓] Powerlevel10k installed.${endColour}"
 }
 
 say_hello
